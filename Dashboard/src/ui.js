@@ -2,10 +2,10 @@
 let ui = {
     timer: document.getElementById('timer'),
     robotState: document.getElementById('robot-state').firstChild,
-   
+    commands: {}
 };
 
-
+registerCommandPanel("JoystickDrive")
 registerCommandPanel("ExampleCommand")
 
 
@@ -20,16 +20,22 @@ function registerCommandPanel(commandName){
         <h3>${commandName}</h3>
         <p id="meta-${commandName}">No Meta Data</p>
     </li>`
-    var uiItem = document.getElementById(commandName);
-    var metaItem = document.getElementById("meta-"+commandName)
+    ui.commands[commandName] ={
+        item: document.getElementById(commandName),
+        meta: document.getElementById("meta-"+commandName)
+    }
+
     NetworkTables.addKeyListener(statusPath, (key,val)=>{
-        uiItem.classList.replace(uiItem.classList[1], val)
-    
+        ui.commands[commandName].item.classList.replace( ui.commands[commandName].item.classList[1], val)
+        console.log(key);
+        
     })
 
     NetworkTables.addKeyListener(metaPath, (key,val)=>{
-        metaItem.innerText = val;
-        console.log(val);
+        
+        
+        ui.commands[commandName].meta.innerText = val;
+
         
     })
     
